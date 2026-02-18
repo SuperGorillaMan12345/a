@@ -4,12 +4,13 @@ import fetch from "node-fetch";
 const app = express();
 app.use(express.json());
 
-// 確認用
+// これを追加 ← これが無いとCannot GET
+app.use(express.static("public"));  
+
 app.get("/", (req, res) => {
-  res.send("server alive");   // これがブラウザに出るだけ
+  res.send("server alive");
 });
 
-// Discord通知用
 app.post("/notify", async (req, res) => {
   const msg = req.body?.message || "通知テスト";
 
