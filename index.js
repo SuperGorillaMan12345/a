@@ -1,27 +1,21 @@
-import express from "express";
-import fetch from "node-fetch";
+async function send() {
+  const message = document.getElementById("msg").value.trim();
+  if(!message) return showPopup("Please enter a Game ID");
 
-const app = express();
-app.use(express.json());
-
-// これを追加 ← これが無いとCannot GET
-app.use(express.static("public"));  
-
-app.get("/", (req, res) => {
-  res.send("server alive");
-});
-
-app.post("/notify", async (req, res) => {
-  const msg = req.body?.message || "通知テスト";
-
-  await fetch(process.env.DISCORD_WEBHOOK_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ content: msg })
-  });
-
-  res.json({ ok: true });
-});
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`running on ${port}`));
+  try {
+    const res = await fetch("/notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message })
+    });
+    const data = await res.json();
+    if(data.ok){
+      showPopup("Request sent successfully!");
+      document.getElementById("downloadLink").style.display = "inline-block";
+    } else {
+      showPopup("Failed to send: " + (data.error || "Unknown error"));
+    }
+  } catch(e){
+    showPopup("Failed to send: Network error");
+  }
+}
