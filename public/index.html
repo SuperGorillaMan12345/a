@@ -3,7 +3,6 @@
 <head>
   <title>Discord通知送信</title>
   <style>
-    /* 背景を黒に */
     body {
       background-color: #000;
       color: #fff;
@@ -14,6 +13,7 @@
       margin: 0;
       font-family: sans-serif;
       flex-direction: column;
+      position: relative;
     }
 
     input {
@@ -38,6 +38,24 @@
     button:hover {
       background-color: #0d6efd;
     }
+
+    /* ポップアップ用 */
+    #popup {
+      position: absolute;
+      top: 20px;
+      background-color: #1e90ff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+    }
+
+    #popup.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -45,19 +63,39 @@
   <input type="text" id="msg" placeholder="メッセージ入力"/>
   <button onclick="send()">送信</button>
 
+  <!-- ポップアップ -->
+  <div id="popup"></div>
+
   <script>
     async function send() {
       const message = document.getElementById("msg").value;
-      if (!message) return alert("メッセージを入力してください");
+      if (!message) return showPopup("メッセージを入力してください");
 
-      const res = await fetch("/notify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message })
-      });
+      try {
+        const res = await fetch("/notify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        });
 
-      const data = await res.json();
-      alert(data.ok ? "送信成功！" : `送信失敗: ${data.error || "不明なエラー"}`);
+        const data = await res.json();
+        if(data.ok){
+          showPopup("送信成功！");
+        } else {
+          showPopup("送信失敗: " + (data.error || "不明なエラー"));
+        }
+      } catch(e) {
+        showPopup("送信失敗: ネットワークエラー");
+      }
+    }
+
+    function showPopup(text) {
+      const popup = document.getElementById("popup");
+      popup.textContent = text;
+      popup.classList.add("show");
+      setTimeout(() => {
+        popup.classList.remove("show");
+      }, 2000); // 2秒で消える
     }
   </script>
 </body>
