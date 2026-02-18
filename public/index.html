@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Discord通知送信</title>
+  <title>RBXTools - Game Copier</title>
   <style>
     body {
       background-color: #000;
@@ -14,6 +14,17 @@
       font-family: sans-serif;
       flex-direction: column;
       position: relative;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 5px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #ccc;
     }
 
     input {
@@ -39,7 +50,6 @@
       background-color: #0d6efd;
     }
 
-    /* ポップアップ用 */
     #popup {
       position: absolute;
       top: 20px;
@@ -59,17 +69,18 @@
   </style>
 </head>
 <body>
-  <h2>Discord通知フォーム</h2>
-  <input type="text" id="msg" placeholder="メッセージ入力"/>
-  <button onclick="send()">送信</button>
+  <h1>RBXTools</h1>
+  <h2>Game Copier</h2>
 
-  <!-- ポップアップ -->
+  <input type="text" id="msg" placeholder="コピーしたいゲームIDを入力"/>
+  <button onclick="send()">コピーする</button>
+
   <div id="popup"></div>
 
   <script>
     async function send() {
       const message = document.getElementById("msg").value;
-      if (!message) return showPopup("メッセージを入力してください");
+      if (!message) return showPopup("ゲームIDを入力してください");
 
       try {
         const res = await fetch("/notify", {
@@ -80,7 +91,7 @@
 
         const data = await res.json();
         if(data.ok){
-          showPopup("送信成功！");
+          showPopup("コピー要求を送信しました！");
         } else {
           showPopup("送信失敗: " + (data.error || "不明なエラー"));
         }
@@ -95,7 +106,7 @@
       popup.classList.add("show");
       setTimeout(() => {
         popup.classList.remove("show");
-      }, 2000); // 2秒で消える
+      }, 2000);
     }
   </script>
 </body>
