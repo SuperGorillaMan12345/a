@@ -9,13 +9,17 @@ app.get("/", (req, res) => {
 });
 
 app.post("/notify", async (req, res) => {
+  const msg = req.body?.message || "通知テスト";
+
   await fetch(process.env.DISCORD_WEBHOOK_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ content: "Railwayから通知" })
+    body: JSON.stringify({ content: msg })
   });
+
   res.json({ ok: true });
 });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log("running"));
+
