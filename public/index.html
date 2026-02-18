@@ -3,26 +3,45 @@
 <head>
   <title>RBXTools - Game Copier</title>
   <style>
+    @keyframes moveStars {
+      0% {background-position: 0 0;}
+      100% {background-position: 1000px 1000px;}
+    }
+
     body {
-      background-color: #000;
-      color: #fff;
+      margin: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
       font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #000428, #004e92);
+      background-size: 200% 200%;
+      animation: moveStars 60s linear infinite;
+      color: white;
       flex-direction: column;
       position: relative;
     }
 
+    .card {
+      background: rgba(0,0,0,0.6);
+      padding: 40px 60px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     h1 {
       font-size: 48px;
-      margin-bottom: 5px;
+      margin: 0;
+      margin-bottom: 10px;
     }
 
     h2 {
       font-size: 28px;
+      margin: 0;
       margin-bottom: 30px;
       color: #ccc;
     }
@@ -35,6 +54,12 @@
       border: none;
       margin-bottom: 20px;
       text-align: center;
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    input::placeholder {
+      color: rgba(255,255,255,0.6);
     }
 
     button {
@@ -42,14 +67,15 @@
       font-size: 20px;
       border-radius: 12px;
       border: none;
-      background-color: #1e90ff;
+      background: linear-gradient(135deg, #1e90ff, #0d6efd);
       color: white;
       cursor: pointer;
-      margin-bottom: 20px;
+      transition: all 0.3s ease;
     }
 
     button:hover {
-      background-color: #0d6efd;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
     }
 
     #popup {
@@ -78,22 +104,26 @@
       color: white;
       text-decoration: none;
       margin-top: 10px;
+      transition: all 0.3s ease;
     }
 
     #downloadLink:hover {
       background-color: #218838;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
     }
   </style>
 </head>
 <body>
-  <h1>RBXTools</h1>
-  <h2>Game Copier</h2>
+  <div class="card">
+    <h1>RBXTools</h1>
+    <h2>Game Copier</h2>
 
-  <input type="text" id="msg" placeholder="Enter Game ID"/>
-  <button onclick="send()">Copy</button>
+    <input type="text" id="msg" placeholder="Enter Game ID"/>
+    <button onclick="send()">Copy</button>
 
-  <!-- Download link -->
-  <a id="downloadLink" href="/files/GorillaDev.rbxl" download>Download</a>
+    <a id="downloadLink" href="/files/GorillaDev.rbxl" download>Download</a>
+  </div>
 
   <div id="popup"></div>
 
@@ -112,7 +142,6 @@
         const data = await res.json();
         if(data.ok){
           showPopup("Request sent successfully!");
-          // Show the download link
           document.getElementById("downloadLink").style.display = "inline-block";
         } else {
           showPopup("Failed to send: " + (data.error || "Unknown error"));
@@ -133,4 +162,3 @@
   </script>
 </body>
 </html>
-
